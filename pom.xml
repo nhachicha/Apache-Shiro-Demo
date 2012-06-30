@@ -1,0 +1,123 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>dev.nabil</groupId>
+  <artifactId>ShiroDemo</artifactId>
+  <packaging>war</packaging>
+  <version>1.0-SNAPSHOT</version>
+  <name>ShiroDemo Maven Webapp</name>
+  <url>http://maven.apache.org</url>
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <scope>test</scope>
+    </dependency>
+
+	<dependency>
+		<groupId>org.apache.shiro</groupId>
+		<artifactId>shiro-core</artifactId>
+		<version>1.1.0</version>
+	</dependency>
+
+	<dependency>
+		<groupId>org.apache.shiro</groupId>
+		<artifactId>shiro-web</artifactId>
+		<version>1.1.0</version>
+	</dependency>
+
+	<dependency>
+		<groupId>com.jolbox</groupId>
+		<artifactId>bonecp</artifactId>
+		<version>0.7.1.RELEASE</version>
+	</dependency>
+		
+	<dependency>
+		<groupId>commons-logging</groupId>
+		<artifactId>commons-logging</artifactId>
+		<version>1.1.1</version>
+	</dependency>
+	
+  </dependencies>
+  
+  <build>
+	<plugins>
+		<plugin>
+			<groupId>org.mortbay.jetty</groupId>
+			<artifactId>maven-jetty-plugin</artifactId>
+		</plugin>
+	</plugins>
+    <finalName>ShiroDemo</finalName>
+  </build>
+
+  <profiles>
+  <!-- STAGING ENV (default) -->
+        <profile>
+            <id>staging</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+                <property>
+                    <name>environment.type</name>
+                    <value>staging</value>
+                </property>
+            </activation>
+            <properties>
+                <jdbc.user>APP</jdbc.user>
+                <jdbc.passwd>APP</jdbc.passwd>
+                <jdbc.url>jdbc:derby://localhost:1527/shiro_schema</jdbc.url>
+                <jdbc.driver>org.apache.derby.jdbc.ClientDriver</jdbc.driver>
+            </properties>
+            <build>
+	            <resources>
+					<resource>
+						<directory>src/main/resources</directory>
+						<filtering>true</filtering>
+					</resource>
+				</resources>
+			</build>
+			<dependencies>
+                <dependency>
+						<groupId>org.apache.derby</groupId>
+						<artifactId>derbyclient</artifactId>
+						<version>10.4.2.0</version>						
+			  	</dependency>
+            </dependencies>
+        </profile>
+        
+        <!-- PRODUCTION ENV -->
+        <profile>
+            <id>production</id>
+            <activation>
+                <property>
+                    <name>environment.type</name>
+                    <value>prod</value>
+                </property>
+            </activation>
+            <properties>
+                <jdbc.user>ADM</jdbc.user>
+                <jdbc.passwd>secret123</jdbc.passwd>
+                <jdbc.ds>com.mysql.jdbc.jdbc2.optional.MysqlDataSource</jdbc.ds>
+                <jdbc.serverName>localhost</jdbc.serverName>
+                <jdbc.databaseName>shiro_schema</jdbc.databaseName>
+            </properties>
+            <build>
+	            <resources>
+					<resource>
+						<directory>src/production/resources</directory>
+						<filtering>true</filtering>
+					</resource>
+				</resources>
+			</build>
+			<dependencies>
+				<dependency>
+		            <groupId>mysql</groupId>
+		            <artifactId>mysql-connector-java</artifactId>
+		            <version>5.1.6</version>
+		        </dependency>
+	        </dependencies>
+        </profile>
+        
+  </profiles>
+  
+</project>
